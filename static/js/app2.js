@@ -28,7 +28,7 @@ function buildTable(data) {
 // 1. Create a variable to keep track of all the filters as an object.
 var filters = {};
 
-// 3. Use this function to update the filters.
+// 3. Use this function to update the filters. 
 function updateFilters() {
 
     // 4a. Save the element that was changed as a variable.
@@ -39,7 +39,7 @@ function updateFilters() {
 
     // 4c. Save the id of the filter that was changed as a variable.
     let filterId = changedElement.attr("id");
-
+  
     // 5. If a filter value was entered then add that filterId and value
     // to the filters list. Otherwise, clear that filter from the filters object.
     if (changedElement) {
@@ -48,11 +48,14 @@ function updateFilters() {
     else {
         delete filters[filterId];
     }
-
+  
     // 6. Call function to apply all filters and rebuild the table
     filterTable();
   }
 
+  function search(fdata){
+    return Object.keys(this).every((key) => filters[key] === this[key]);
+}
 
     // 7. Use this function to filter the table when data is entered.
     function filterTable() {
@@ -62,22 +65,17 @@ function updateFilters() {
 
         // 9. Loop through all of the filters and keep any data that
         // matches the filter values
-        //for ([key,value] of Object.entries(filters)) {
-        filteredData = filteredData.filter(row => {
-            for (let key in filters) {
-                if (row[key] === undefined || row[key] != filters[key])
-                    return false;
-            }
-            return true;
-        });
+//        for ([key,value] of Object.entries(filters)) {
+  //          filteredData = filteredData.filter(row => row.key == value);
+        filteredData = filteredData.filter(search, filters);
         //console.log("Key: " +  key, "Value: " + value);
         //};
 
         // 10. Finally, rebuild the table using the filtered data
         buildTable(filteredData);
-     //   console.log("filtered table built");
+        console.log("filtered table built");
     }
-
+  
     // 2. Attach an event to listen for changes to each filter
     d3.selectAll("input").on("change", updateFilters);
 
